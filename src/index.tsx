@@ -1,19 +1,41 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React, { useState } from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import { ThemeProvider } from "styled-components";
+import { lightTheme, darkTheme } from "./theme";
+import { QueryClient, QueryClientProvider } from "react-query";
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
-root.render(
+const queryClient = new QueryClient();
+
+const Root = () => {
+  const [theme, setTheme] = useState(lightTheme);
+
+  const toggleTheme = () => {
+    setTheme(theme === lightTheme ? darkTheme : lightTheme);
+  };
+  return (
+    <ThemeProvider theme={theme}>
+      <App toggleTheme={toggleTheme} />
+    </ThemeProvider>
+  );
+};
+
+ReactDOM.render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <Root />
+    </QueryClientProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <QueryClientProvider client={queryClient}>
+//       <ThemeProvider theme={lightTheme}>
+//         <App />
+//       </ThemeProvider>
+//     </QueryClientProvider>
+//   </React.StrictMode>,
+//   document.getElementById("root")
+// );
